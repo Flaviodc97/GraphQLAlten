@@ -1,4 +1,9 @@
+using ProgrammingLanguageGraphQL.Data;
+using ProgrammingLanguageGraphQL.Interface;
+using ProgrammingLanguageGraphQL.Repository;
+
 var builder = WebApplication.CreateBuilder(args);
+ConfigurationManager configuration = builder.Configuration;
 
 // Add services to the container.
 
@@ -6,6 +11,15 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<IProgrammingLanguageRepository, ProgrammingLanguageRepository>();
+builder.Services.AddScoped<ITypeLanguageRepository, TypeLanguageRepository>();
+
+builder.Services.AddDbContext<ProgrammingLanguageDbContext>(
+  options => options.UseSqlServer(
+     builder.Configuration.GetConnectionString("DbConn")
+  )
+);
 
 var app = builder.Build();
 
