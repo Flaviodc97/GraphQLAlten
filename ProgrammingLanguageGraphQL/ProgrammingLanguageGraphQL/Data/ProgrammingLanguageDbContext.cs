@@ -6,7 +6,7 @@ namespace ProgrammingLanguageGraphQL.Data
 {
     public class ProgrammingLanguageDbContext : DbContext
     {
-        public ProgrammingLanguageDbContext(DbContextOptions options) : base (options) 
+        public ProgrammingLanguageDbContext(DbContextOptions<ProgrammingLanguageDbContext> options) : base (options) 
         { 
         
         }
