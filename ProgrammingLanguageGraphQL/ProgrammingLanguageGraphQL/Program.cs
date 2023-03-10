@@ -1,6 +1,7 @@
 using ProgrammingLanguageGraphQL.Data;
 using ProgrammingLanguageGraphQL.Interface;
 using ProgrammingLanguageGraphQL.Repository;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
