@@ -17,7 +17,7 @@ namespace ProgrammingLanguageGraphQL.Data
             builder.ApplyConfiguration(new ProgrammingLanguageContextConfiguration(ids));
            
         }
-        public DbSet<ProgrammingLanguage> programmingLanguages { get; set; }
-        public DbSet<TypeLanguage> types { get; set; }
+        public DbSet<ProgrammingLanguage> ProgrammingLanguages { get; set; }
+        public DbSet<TypeLanguage> Types { get; set; }
     }
 }

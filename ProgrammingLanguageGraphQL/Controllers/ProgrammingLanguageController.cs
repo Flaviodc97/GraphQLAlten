@@ -1,33 +1,33 @@
-using LanguageGraphQL.Data;
-using LanguageGraphQL.Model;
+using ProgrammingLanguageGraphQL.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ProgrammingLanguageGraphQL.Models;
 
-namespace LanguageGraphQL.Controller
+namespace ProgrammingLanguageGraphQL.Controller
 {
     [Route("api/[Controller]")]
     [ApiController]
     public class ProgrammingLanguageController : ControllerBase
     {
-        private readonly ProgrammingLanguageContext _context;
-        public ProgrammingLanguageController(ProgrammingLanguageContext context)
+        private readonly ProgrammingLanguageDbContext _context;
+        public ProgrammingLanguageController(ProgrammingLanguageDbContext context)
         {
             _context = context;
         }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProgrammingLanguage>>> GetLanguages()
         {
-            return await _context.ProgrammingLanguage.ToListAsync();
+            return await _context.ProgrammingLanguages.ToListAsync();
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<ProgrammingLanguage>> GetRecipe(int id)
         {
-            var language = await _context.ProgrammingLanguage.FindAsync(id);
+            var language = await _context.ProgrammingLanguages.FindAsync(id);
             if (language == null) { return NotFound(); }
             return language;
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutLanguage(int id, ProgrammingLanguage programmingLanguage)
+        public async Task<IActionResult> PutLanguage(Guid id, ProgrammingLanguage programmingLanguage)
         {
             if(id != programmingLanguage.Id)
             {
@@ -51,9 +51,9 @@ namespace LanguageGraphQL.Controller
                 }
             }
         }
-        private async Task<bool> LanguageExists(int id)
+        private async Task<bool> LanguageExists(Guid id)
         {
-           return await _context.ProgrammingLanguage.AnyAsync(x => x.Id == id);
+           return await _context.ProgrammingLanguages.AnyAsync(x => x.Id == id);
         }
     }
 }
