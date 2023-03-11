@@ -16,6 +16,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IProgrammingLanguageRepository, ProgrammingLanguageRepository>();
 builder.Services.AddScoped<ITypeLanguageRepository, TypeLanguageRepository>();
 
+builder.Services.AddGraphQLServer().AddQueryType<Query>().AddProjections().AddFiltering().AddSorting(); ;
+
 builder.Services.AddDbContext<ProgrammingLanguageDbContext>(
   options => options.UseSqlServer(
      builder.Configuration.GetConnectionString("DbConn")
@@ -36,5 +38,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapGraphQL("/graphql");
 
 app.Run();
