@@ -2,6 +2,8 @@ using ProgrammingLanguageGraphQL.Data;
 using ProgrammingLanguageGraphQL.Interface;
 using ProgrammingLanguageGraphQL.Repository;
 using Microsoft.EntityFrameworkCore;
+using ProgrammingLanguageGraphQL.Interfaces;
+using ProgrammingLanguageGraphQL.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -13,7 +15,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IProgrammingLanguageRepository, ProgrammingLanguageRepository>();
+builder.Services.AddTransient<IRepository<ProgrammingLanguage>, ProgrammingLanguageRepository>();
 builder.Services.AddScoped<ITypeLanguageRepository, TypeLanguageRepository>();
 
 builder.Services.AddGraphQLServer().AddQueryType<Query>().AddProjections().AddFiltering().AddSorting(); ;

@@ -1,55 +1,51 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProgrammingLanguageGraphQL.Data;
+using ProgrammingLanguageGraphQL.Interfaces;
+using System.Data;
 
 namespace ProgrammingLanguageGraphQL.Repository
 {
-    public abstract class AbstractRepository<T> where T : class
+    public abstract class AbstractRepository<T> : IRepository<T> where T : class
     {
-        protected readonly ProgrammingLanguageDbContext _context;
-        protected readonly DbSet<T> _dbSet;
+        protected ProgrammingLanguageDbContext _context;
+
         public AbstractRepository(ProgrammingLanguageDbContext context)
         {
             _context = context;
-            _dbSet = context.Set<T>();
-        }
-        public async Task<Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<T>> Create(T obj)
+         }
+
+        public virtual T GetById(Guid id)
         {
-            var resp = await  _dbSet.AddAsync(obj);
-            await this.Save();
-            return resp;
+            var entityToSend = _context.Set<T>().Find(id);
+            return entityToSend;
+           
             
         }
-        public virtual async Task<T> GetByIdAsync(object id)
+
+         public virtual IEnumerable<T> GetAll()
         {
-            return await _dbSet.FindAsync(id);
-        }
-        public virtual async Task<IEnumerable<T>> GetAllAsync()
-        {
-            return await _dbSet.ToListAsync();
-        }
-        public virtual async Task UpdateAsync(T entity)
-        {
-            _dbSet.Attach(entity);
-            _context.Entry(entity).State = EntityState.Modified;
-        }
-        public virtual async Task DeleteAsync(object id)
-        {
-            T entityToDelete = await _dbSet.FindAsync(id);
-            Delete(entityToDelete);
-        }
-        public virtual void Delete(T entityToDelete)
-        {
-            if (_context.Entry(entityToDelete).State == EntityState.Detached)
-            {
-                _dbSet.Attach(entityToDelete);
-            }
-            _dbSet.Remove(entityToDelete);
-        }
-        private async Task<bool> Save()
-        {
-            var resp = await _context.SaveChangesAsync();
-            return resp >= 0;
+            return _context.Set<T>().ToList();
+            
+           
         }
 
-    }
+        public virtual void Add(T entity)
+        {
+            // logica per aggiungere una nuova entità
+            throw new NotImplementedException();
+        }
+
+        public virtual void Update(T entity)
+        {
+            // logica per aggiornare i dati di un'entità esistente
+            throw new NotImplementedException();
+        }
+
+         public virtual void Delete(int id)
+        {
+            // logica per eliminare l'entità con l'id specificato
+            throw new NotImplementedException();
+        }
+
+}
 }

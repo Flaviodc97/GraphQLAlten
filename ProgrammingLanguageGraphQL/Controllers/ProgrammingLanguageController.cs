@@ -2,6 +2,7 @@ using ProgrammingLanguageGraphQL.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProgrammingLanguageGraphQL.Models;
+using ProgrammingLanguageGraphQL.Interfaces;
 
 namespace ProgrammingLanguageGraphQL.Controller
 {
@@ -9,27 +10,30 @@ namespace ProgrammingLanguageGraphQL.Controller
     [ApiController]
     public class ProgrammingLanguageController : ControllerBase
     {
+        private readonly IRepository<ProgrammingLanguage> _programmingLanguageRepository;
         private readonly ProgrammingLanguageDbContext _context;
-        public ProgrammingLanguageController(ProgrammingLanguageDbContext context)
+        public ProgrammingLanguageController(IRepository<ProgrammingLanguage> programmingLanguageRepository, ProgrammingLanguageDbContext context)
         {
-            _context = context;
+           _programmingLanguageRepository= programmingLanguageRepository;
+            _context= context;
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProgrammingLanguage>>> GetLanguages()
+        public  ActionResult<IEnumerable<ProgrammingLanguage>> GetLanguages()
         {
-            return await _context.ProgrammingLanguages.ToListAsync();
+            var allP = _programmingLanguageRepository.GetAll();
+            return Ok(allP);
         }
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProgrammingLanguage>> GetRecipe(int id)
+        public ActionResult<ProgrammingLanguage> GetRecipe(Guid id)
         {
-            var language = await _context.ProgrammingLanguages.FindAsync(id);
+            var language = _programmingLanguageRepository.GetById(id);
             if (language == null) { return NotFound(); }
             return language;
         }
         [HttpPut("{id}")]
         public async Task<IActionResult> PutLanguage(Guid id, ProgrammingLanguage programmingLanguage)
         {
-            if(id != programmingLanguage.Id)
+            if (id != programmingLanguage.Id)
             {
                 return BadRequest();
             }
@@ -39,7 +43,7 @@ namespace ProgrammingLanguageGraphQL.Controller
                 await _context.SaveChangesAsync();
                 return Ok();
             }
-            catch(DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException)
             {
                 if (await LanguageExists(id))
                 {
@@ -51,9 +55,10 @@ namespace ProgrammingLanguageGraphQL.Controller
                 }
             }
         }
-        private async Task<bool> LanguageExists(Guid id)
+        [HttpGet("Exist")]
+        public async Task<bool> LanguageExists(Guid id)
         {
-           return await _context.ProgrammingLanguages.AnyAsync(x => x.Id == id);
+            return await _context.ProgrammingLanguages.AnyAsync(x => x.Id == id);
         }
     }
 }

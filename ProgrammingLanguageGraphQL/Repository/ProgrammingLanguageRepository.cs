@@ -1,16 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProgrammingLanguageGraphQL.Data;
 using ProgrammingLanguageGraphQL.Interface;
+using ProgrammingLanguageGraphQL.Models;
 
 namespace ProgrammingLanguageGraphQL.Repository
 {
-    public class ProgrammingLanguageRepository : IProgrammingLanguageRepository
+    public class ProgrammingLanguageRepository : AbstractRepository<ProgrammingLanguage>
     {
-        private readonly ProgrammingLanguageDbContext _context;
-        public ProgrammingLanguageRepository(ProgrammingLanguageDbContext context)
+        
+        public ProgrammingLanguageRepository(ProgrammingLanguageDbContext context ) : base(context)
         {
-            _context= context;
         }
-
     }
 }
