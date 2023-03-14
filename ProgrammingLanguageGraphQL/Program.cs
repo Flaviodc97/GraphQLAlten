@@ -2,6 +2,9 @@ using ProgrammingLanguageGraphQL.Data;
 using ProgrammingLanguageGraphQL.Interface;
 using ProgrammingLanguageGraphQL.Repository;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using ProgrammingLanguageGraphQL.NewFolder;
+using ProgrammingLanguageGraphQL.ViewModels;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -16,7 +19,23 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IProgrammingLanguageRepository, ProgrammingLanguageRepository>();
 builder.Services.AddScoped<ITypeLanguageRepository, TypeLanguageRepository>();
 
-builder.Services.AddGraphQLServer().AddQueryType<Query>().AddProjections().AddFiltering().AddSorting(); ;
+builder.Services.AddGraphQLServer()
+    .AddQueryType<Query>()
+    .AddMutationType <Mutation>()
+    .AddType<ProgrammingLanguageInput>()
+    .AddType<TypeLanguageInput>()
+    .AddProjections()
+    .AddFiltering()
+    .AddSorting();
+
+builder.Services.AddAutoMapper(typeof(ProgrammingLanguageMappingProfile));
+
+var mapperConfig = new MapperConfiguration(cfg =>
+{
+    cfg.AddProfile(new ProgrammingLanguageMappingProfile());
+});
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
 
 builder.Services.AddDbContext<ProgrammingLanguageDbContext>(
   options => options.UseSqlServer(
